@@ -44,7 +44,6 @@ module.exports = {
         ],
     },
     exec: async (ctx) => {
-        console.log(ctx.options.data.options);
         const name = ctx.options.getString("name");
         let content;
         switch (ctx.options.getSubcommand()) {
