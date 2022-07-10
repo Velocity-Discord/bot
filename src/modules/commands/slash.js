@@ -1,10 +1,10 @@
 const commands = require(".");
 const client = require("./client");
 
-module.exports = [require("./ping").config];
+module.exports = [require("./ping").config, require("./tag").config];
 
 client.on("interactionCreate", async (interaction) => {
-    if (!interaction.isCommand()) return;
+    if (!(interaction.isCommand() || interaction.isAutocomplete())) return;
 
     const command = interaction.commandName;
 
