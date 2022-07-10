@@ -6,8 +6,15 @@ module.exports = {
     guilds: require("./guilds"),
 };
 
+let TIMEOUT = null;
+
 client.on("messageCreate", async (message) => {
     if (message.author.bot) return;
+
+    if (TIMEOUT) return;
+    TIMEOUT = setTimeout(() => {
+        TIMEOUT = null;
+    }, 100);
 
     if (message.content.trim() == `<@${process.env.CLIENT_ID}>`) {
         message.reply("what, do i look like a slave to you?");
