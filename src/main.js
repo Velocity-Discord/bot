@@ -4,7 +4,7 @@ const client = require("./modules/commands/client");
 
 require("dotenv").config();
 
-const commands = require("./modules/commands/slash");
+const globalCommands = require("./modules/commands/slash");
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
@@ -12,7 +12,7 @@ const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
     try {
         console.log("Started refreshing application (/) commands.");
 
-        await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: commands });
+        await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: globalCommands });
 
         console.log("Successfully reloaded application (/) commands.");
     } catch (error) {
