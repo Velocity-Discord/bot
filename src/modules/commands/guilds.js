@@ -2,6 +2,7 @@ const client = require("./client");
 
 module.exports = {
     config: {
+        internalCommandType: "text",
         name: "guilds",
         description: "Lists the guilds the bot is in.",
     },
