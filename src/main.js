@@ -4,6 +4,8 @@ const client = require("./modules/commands/client");
 
 require("dotenv").config();
 
+require("./modules/util/starboard")();
+
 const globalCommands = require("./modules/commands/slash");
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
@@ -21,7 +23,7 @@ const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 })();
 
 client.on("ready", () => {
-    console.log(`Logged in as ${client.user?.tag}!`);
+    console.log(`Logged in as ${client.user?.tag}! Active on ${client.guilds.cache.size} servers.`);
 });
 
 client.login(process.env.TOKEN);
