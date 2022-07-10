@@ -1,10 +1,8 @@
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
-const { Client, Intents } = require("discord.js");
 const client = require("./modules/commands/client");
-require("dotenv").config();
 
-const MENTION_RESPONSES = require("./modules/responses/mentions");
+require("dotenv").config();
 
 const commands = require("./modules/commands/slash");
 
@@ -23,7 +21,7 @@ const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 })();
 
 client.on("ready", () => {
-    console.log(`Logged in as ${client.user?.tag}! Connected to ${client.ws?.socket}`);
+    console.log(`Logged in as ${client.user?.tag}!`);
 });
 
 client.login(process.env.TOKEN);
