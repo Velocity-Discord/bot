@@ -4,6 +4,7 @@ const MENTION_RESPONSES = require("../responses/mentions");
 module.exports = {
     ping: require("./ping"),
     guilds: require("./guilds"),
+    tag: require("./tag")
 };
 
 let TIMEOUT = null;
