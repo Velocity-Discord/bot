@@ -4,7 +4,7 @@ const MENTION_RESPONSES = require("../responses/mentions");
 module.exports = {
     ping: require("./ping"),
     guilds: require("./guilds"),
-    tag: require("./tag")
+    tag: require("./tag"),
 };
 
 let TIMEOUT = null;
@@ -30,6 +30,8 @@ client.on("messageCreate", async (message) => {
     if (!message.content.startsWith(process.env.PREFIX)) return;
 
     if (module.exports[command]) {
+        if (module.exports[command].config.internalCommandType !== "text") return;
+
         module.exports[command].exec(message);
     }
 });

@@ -2,6 +2,7 @@ const client = require("./client");
 
 module.exports = {
     config: {
+        internalCommandType: "slash",
         name: "ping",
         description: "pong",
     },
