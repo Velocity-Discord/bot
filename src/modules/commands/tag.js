@@ -24,6 +24,20 @@ module.exports = {
                 ],
             },
             {
+                name: "delete",
+                description: "Delete a tag",
+                type: 1,
+                options: [
+                    {
+                        name: "name",
+                        description: "The name of the tag",
+                        type: 3,
+                        autocomplete: true,
+                        required: true,
+                    },
+                ],
+            },
+            {
                 name: "create",
                 description: "Create a tag",
                 type: 1,
@@ -76,6 +90,14 @@ module.exports = {
                 await ctx.reply({ content: "Tag Created." });
                 writeFileSync(path.resolve(__dirname, "../../stores/tags.json"), JSON.stringify(store, null, 4));
                 break;
+            case "delete":
+                if (!ctx.member.permissions.has("MANAGE_GUILD")) {
+                    await ctx.reply({ content: "You do not have permission to create tags.", ephemeral: true });
+                    break;
+                }
+                delete store[name]
+                await ctx.reply({content: "Tag Deleted"})
+                writeFileSync(path.resolve(__dirname, "../../stores/tags.json"), JSON.stringify(store, null, 4));
         }
     },
 };
