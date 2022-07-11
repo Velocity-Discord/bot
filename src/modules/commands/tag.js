@@ -66,6 +66,7 @@ module.exports = {
                         name: "name",
                         description: "The name of the tag",
                         type: 3,
+                        autocomplete: true,
                         required: true,
                     },
                     {
@@ -165,7 +166,7 @@ module.exports = {
                 await ctx.reply({ content: "Tag Deleted" });
                 writeFileSync(path.resolve(__dirname, "../../stores/tags.json"), JSON.stringify(store, null, 4));
                 break;
-            case "create":
+            case "edit":
                 if (!ctx.member.permissions.has("MANAGE_GUILD")) {
                     embed = new MessageEmbed({
                         title: "Missing Permission",
@@ -178,6 +179,20 @@ module.exports = {
                     await ctx.reply({ embeds: [embed], ephemeral: true });
                     break;
                 }
+
+                if (!store[name]) {
+                    embed = new MessageEmbed({
+                        title: "Tag not found",
+                        description: "The tag you are looking for does not exist",
+                        timestamp: Date.now(),
+                        color: "#ED4245",
+                        footer: {},
+                    });
+
+                    await ctx.reply({ embeds: [embed], ephemeral: true });
+                    break;
+                }
+
                 content = ctx.options.getString("content");
                 store[name] = content;
                 embed = new MessageEmbed({
