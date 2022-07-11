@@ -57,6 +57,25 @@ module.exports = {
                     },
                 ],
             },
+            {
+                name: "edit",
+                description: "Edit a tag",
+                type: 1,
+                options: [
+                    {
+                        name: "name",
+                        description: "The name of the tag",
+                        type: 3,
+                        required: true,
+                    },
+                    {
+                        name: "content",
+                        description: "The new content of the tag",
+                        type: 3,
+                        required: true,
+                    },
+                ],
+            },
         ],
     },
     exec: async (ctx) => {
@@ -145,6 +164,33 @@ module.exports = {
                 });
                 await ctx.reply({ content: "Tag Deleted" });
                 writeFileSync(path.resolve(__dirname, "../../stores/tags.json"), JSON.stringify(store, null, 4));
+                break;
+            case "create":
+                if (!ctx.member.permissions.has("MANAGE_GUILD")) {
+                    embed = new MessageEmbed({
+                        title: "Missing Permission",
+                        description: "You do not have permission to edit tags.",
+                        timestamp: Date.now(),
+                        color: "#ED4245",
+                        footer: {},
+                    });
+
+                    await ctx.reply({ embeds: [embed], ephemeral: true });
+                    break;
+                }
+                content = ctx.options.getString("content");
+                store[name] = content;
+                embed = new MessageEmbed({
+                    title: "Tag Edited",
+                    description: `The tag ${name} has been edited`,
+                    timestamp: Date.now(),
+                    color: "#5B89FD",
+                    footer: {},
+                });
+
+                await ctx.reply({ embeds: [embed] });
+                writeFileSync(path.resolve(__dirname, "../../stores/tags.json"), JSON.stringify(store, null, 4));
+                break;
         }
     },
 };
