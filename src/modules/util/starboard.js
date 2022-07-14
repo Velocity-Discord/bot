@@ -24,7 +24,7 @@ module.exports = () => {
         if (reaction.emoji.name === "⭐") {
             const reactionCount = message.reactions.cache.get("⭐")?.count || 0;
 
-            const starboardChannel = guild.id == "959035496707817502" ? guild.channels.cache.get("993360252311453796") : guild.channels.cache.get("914659420028436481");
+            const starboardChannel = guild.channels.cache.find((channel) => channel.name.toLowerCase() === "starboard");
 
             const toSend = `${message.content}
 
@@ -89,7 +89,7 @@ module.exports = () => {
         if (reaction.emoji.name === "⭐") {
             const reactionCount = message.reactions.cache.get("⭐")?.count || 0;
 
-            const starboardChannel = guild.id == "959035496707817502" ? guild.channels.cache.get("993360252311453796") : guild.channels.cache.get("914659420028436481");
+            const starboardChannel = guild.channels.cache.find((channel) => channel.name.toLowerCase() === "starboard");
 
             const toSend = `${message.content}
 
