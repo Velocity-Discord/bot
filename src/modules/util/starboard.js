@@ -37,7 +37,9 @@ module.exports = () => {
                 },
                 description: toSend,
                 timestamp: Date.now(),
-                image: message.attachments.first()?.proxyURL,
+                image: {
+                    url: message.attachments.first()?.proxyURL,
+                },
                 color: "#FFAC32",
             });
 
@@ -102,7 +104,9 @@ module.exports = () => {
                 },
                 description: toSend,
                 timestamp: Date.now(),
-                image: message.attachments.first()?.proxyURL,
+                image: {
+                    url: message.attachments.first()?.proxyURL,
+                },
                 color: "#FFAC32",
             });
 
