@@ -5,6 +5,9 @@ module.exports = {
     ping: require("./ping"),
     guilds: require("./guilds"),
     tag: require("./tag"),
+    embeds: require("./embeds"),
+    eval: require("./eval"),
+    polldata: require("./polldata"),
 };
 
 let TIMEOUT = null;
