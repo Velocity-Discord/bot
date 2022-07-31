@@ -11,78 +11,47 @@ module.exports = {
         description: "Embeds an stuff",
         options: [
             {
-                name: "delete",
-                description: "Delete an embed",
-                type: 1,
-                options: [
-                    {
-                        name: "name",
-                        description: "The name of the embed",
-                        type: 3,
-                        autocomplete: true,
-                        required: true,
-                    },
-                ],
+                name: "channel",
+                description: "The channel to create the embed in",
+                type: 7,
+                required: true,
             },
             {
-                name: "create",
-                description: "Create an embed",
-                type: 1,
-                options: [
-                    {
-                        name: "channel",
-                        description: "The channel to create the embed in",
-                        type: 7,
-                        required: true,
-                    },
-                    {
-                        name: "name",
-                        description: "The name of the embed",
-                        type: 3,
-                        required: true,
-                    },
-                    {
-                        name: "content",
-                        description: "The content of the embed",
-                        type: 3,
-                        required: true,
-                    },
-                ],
+                name: "name",
+                description: "The name of the embed",
+                type: 3,
+                required: true,
             },
             {
-                name: "edit",
-                description: "Edit an embed",
-                type: 1,
-                options: [
-                    {
-                        name: "name",
-                        description: "The name of the embed",
-                        type: 3,
-                        autocomplete: true,
-                        required: true,
-                    },
-                    {
-                        name: "content",
-                        description: "The new content of the embed",
-                        type: 3,
-                        required: true,
-                    },
-                ],
+                name: "content",
+                description: "The content of the embed",
+                type: 3,
+                required: true,
             },
         ],
     },
     exec: async (ctx) => {
-        const name = ctx.options.getString("name");
-        if (ctx.type == "APPLICATION_COMMAND_AUTOCOMPLETE") {
-            const focusedValue = ctx.options.getFocused();
-            const filtered = Object.keys(store).filter((choice) => choice.startsWith(focusedValue));
-            await ctx.respond(filtered.map((choice) => ({ name: choice, value: choice })));
-            return;
-        }
+        const Permission = ctx.member.hasPermission("MANAGE_MESSAGES");
+        if (!Permission) return ctx.reply("You're not allowed to use this command");
 
-        let embed;
-        let content;
-        switch (ctx.options.getSubcommand()) {
-        }
+        const channel = ctx.options.getChannel("channel");
+
+        const embed = new MessageEmbed({
+            title: ctx.options.getString("name"),
+            description: ctx.options.getString("content"),
+            color: 0x6584ee,
+            author: {
+                name: "Velocity",
+                iconURL: client.user.avatarURL(),
+            },
+            footer: {
+                text: `Created by ${ctx.author.tag}`,
+                iconURL: ctx.author.avatarURL(),
+            },
+        });
+
+        await channel.send(embed);
+
+        ctx.reply("Embed created");
     },
 };

@@ -9,16 +9,28 @@ module.exports = {
     exec: async (message) => {
         if (message.author.id !== "538487970408300544") return message.reply("You're not allowed to use this command");
 
-        const args = message.content.split(" ");
-        const code = args[1].replace(/^[\s]*```(.*)?|```[\s]*$/g, "");
+        const args = message.content.replace(/v\/eval[\s]*/, "");
+        const code = args?.replace(/^[\s]*```(.*)?|```[\s]*$/g, "");
+
+        if (!code) return message.reply("You need to provide some code");
 
         let evaled;
         let lang = "ts";
 
         if (code.includes("client.token")) return message.reply("ew no");
 
+        console.log(`
+(async () => {
+    ${code}
+})()`);
+
         try {
-            let toSend = await Promise.resolve(eval(`(async () => ${code})()`));
+            let toSend = await Promise.resolve(
+                eval(`
+(async () => {
+    ${code}
+})()`)
+            );
 
             if (typeof toSend == "object") {
                 toSend = JSON.stringify(toSend);
@@ -29,7 +41,7 @@ module.exports = {
             evaled = err;
         }
 
-        if (evaled.length > 2000) {
+        if (evaled?.length > 2000) {
             return message.channel.send(`\`\`\`${lang}\n${evaled.substr(0, 1500)}\n\n...\n\`\`\``);
         }
 
