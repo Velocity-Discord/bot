@@ -84,14 +84,14 @@ module.exports = () => {
 
         const message = reaction.message;
         const channel = message.channel;
-        const guild = message.guild;
+        const guild = channel.guild;
 
         const messageInStore = store.find((m) => m.id === message.id && m.channel === message.channel.id);
 
         if (reaction.emoji.name === "⭐") {
             const reactionCount = message.reactions.cache.get("⭐")?.count || 0;
 
-            const starboardChannel = guild.channels.cache.find((channel) => channel.name.toLowerCase() === "starboard");
+            const starboardChannel = guild.channels.cache.find((channel) => channel.name.toLowerCase() === "starboard" && channel.send);
 
             const toSend = `${message.content}
 
