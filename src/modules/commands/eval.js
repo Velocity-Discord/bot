@@ -19,11 +19,6 @@ module.exports = {
 
         if (code.includes("client.token")) return message.reply("ew no");
 
-        console.log(`
-(async () => {
-    ${code}
-})()`);
-
         try {
             let toSend = await Promise.resolve(
                 eval(`
