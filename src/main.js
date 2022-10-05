@@ -5,6 +5,7 @@ const client = require("./modules/commands/client");
 require("dotenv").config();
 
 require("./modules/util/starboard")();
+require("./modules/util/skullboard")();
 
 const globalCommands = require("./modules/commands/slash");
 
