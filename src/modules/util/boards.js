@@ -17,7 +17,7 @@ module.exports = () => {
 
         const embed = new MessageEmbed({
             author: {
-                name: message.author.tag,
+                name: message.author?.tag,
                 iconURL: message.author.displayAvatarURL(),
             },
             description: `${message.content}\n\n[Jump to Message](${message.url})`,
