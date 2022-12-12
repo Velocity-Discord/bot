@@ -30,9 +30,6 @@ client.on("messageCreate", async (message) => {
     const args = message.content.split(" ");
     const command = `${args.shift().replace(process.env.PREFIX, "").toLowerCase()}`;
 
-    console.log(`Command: ${command}`);
-    console.log(`Args: ${args}`);
-
     if (!message.content.startsWith(process.env.PREFIX)) return;
 
     if (module.exports[command]) {

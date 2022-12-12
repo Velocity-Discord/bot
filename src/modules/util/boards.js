@@ -5,22 +5,15 @@ const { writeFileSync } = require("fs");
 const path = require("path");
 
 module.exports = () => {
-    client.on("messageReactionAdd", async (reaction, user) => async () => await handleReactions(reaction));
-    client.on("messageReactionRemove", async (reaction, user) => async () => await handleReactions(reaction));
-
-    async function handleReactions(reaction) {
-        if (reaction.partial) {
-            try {
-                await reaction.fetch();
-            } catch (error) {
-                console.error("Something went wrong when fetching the message:", error);
-                return;
-            }
-        }
-
+    const handle = async (reaction) => {
         const message = reaction.message;
         const channel = message.channel;
-        const guild = message.guild;
+        const guild = channel.guild;
+
+        const starboardChannel = guild.channels.cache.find((channel) => channel.name.toLowerCase() === "starboard");
+        const skullboardChannel = guild.channels.cache.find((channel) => channel.name.toLowerCase() === "skullboard");
+
+        const reactionCount = reaction.count;
 
         const embed = new MessageEmbed({
             author: {
@@ -34,28 +27,37 @@ module.exports = () => {
         });
 
         if (reaction.emoji.name === "⭐") {
-            const reactionCount = message.reactions.cache.get("⭐")?.count || 0;
-            const starboardChannel = guild.channels.cache.find((channel) => channel.name.toLowerCase() === "starboard");
-            const messageInStore = store.starboard.find((m) => m.id === message.id && m.channel === message.channel.id);
+            const messageInStore = store.starboard.find((msg) => msg.message === message.id);
+
             if (messageInStore) {
                 const msg = await starboardChannel.messages.fetch(messageInStore.message);
+
                 if (reactionCount > 2) {
-                    return msg.edit({ embeds: [embed], content: `⭐ ${reactionCount} | <#${channel.id}>` });
+                    return msg.edit({ embeds: [embed], content: `${reactionCount < 5 ? "⭐" : "🌟"} ${reactionCount} | <#${channel.id}>` });
                 } else {
                     store.starboard.splice(store.starboard.indexOf(messageInStore), 1);
                     writeFileSync(path.resolve(__dirname, "../../stores/boards.json"), JSON.stringify(store, null, 4));
                     return msg.delete();
                 }
             }
+
             if (reactionCount < 3) return;
-            const msg = await starboardChannel.send({ embeds: [embed], content: `⭐ ${reactionCount} | <#${channel.id}>` });
-            store.starboard.push({ id: message.id, channel: message.channel.id, message: msg.id });
-        } else if (reaction.emoji.name === "💀") {
-            const reactionCount = message.reactions.cache.get("💀")?.count || 0;
-            const skullboardChannel = guild.channels.cache.find((channel) => channel.name.toLowerCase() === "skullboard");
-            const messageInStore = store.skullboard.find((m) => m.id === message.id && m.channel === message.channel.id);
+
+            const msg = await starboardChannel.send({ embeds: [embed], content: `${reactionCount < 5 ? "⭐" : "🌟"} ${reactionCount} | <#${channel.id}>` });
+
+            store.starboard.push({
+                id: message.id,
+                message: msg.id,
+                channel: channel.id,
+            });
+        }
+
+        if (reaction.emoji.name === "💀") {
+            const messageInStore = store.skullboard.find((msg) => msg.message === message.id);
+
             if (messageInStore) {
                 const msg = await skullboardChannel.messages.fetch(messageInStore.message);
+
                 if (reactionCount > 2) {
                     return msg.edit({ embeds: [embed], content: `💀 ${reactionCount} | <#${channel.id}>` });
                 } else {
@@ -64,10 +66,19 @@ module.exports = () => {
                     return msg.delete();
                 }
             }
+
             if (reactionCount < 3) return;
+
             const msg = await skullboardChannel.send({ embeds: [embed], content: `💀 ${reactionCount} | <#${channel.id}>` });
-            store.skullboard.push({ id: message.id, channel: message.channel.id, message: msg.id });
+
+            store.skullboard.push({
+                id: message.id,
+                message: msg.id,
+                channel: channel.id,
+            });
         }
-        writeFileSync(path.resolve(__dirname, "../../stores/boards.json"), JSON.stringify(store, null, 4));
-    }
+    };
+
+    client.on("messageReactionAdd", handle);
+    client.on("messageReactionRemove", handle);
 };

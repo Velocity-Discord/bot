@@ -17,8 +17,6 @@ module.exports = {
 
         const reactions = pollMessage.reactions.cache.sort((a, b) => b.count < a.count);
 
-        console.log(pollMessage.reactions.cache);
-
         let messageString = `
 **${pollMessage.author.username}'s poll results**
 
