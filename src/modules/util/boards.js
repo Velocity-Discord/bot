@@ -18,7 +18,7 @@ module.exports = () => {
         const embed = new MessageEmbed({
             author: {
                 name: message.author?.tag,
-                iconURL: message.author.displayAvatarURL(),
+                iconURL: message.author?.displayAvatarURL?.(),
             },
             description: `${message.content}\n\n[Jump to Message](${message.url})`,
             timestamp: Date.now(),
@@ -27,7 +27,9 @@ module.exports = () => {
         });
 
         if (reaction.emoji.name === "⭐") {
-            const messageInStore = store.starboard.find((msg) => msg.id === message.id);
+            const messageInStore = store.starboard.find((msg) => {
+                return msg.id === message.id;
+            });
 
             if (messageInStore) {
                 const msg = await starboardChannel.messages.fetch(messageInStore.message);
@@ -50,10 +52,14 @@ module.exports = () => {
                 message: msg.id,
                 channel: channel.id,
             });
+
+            writeFileSync(path.resolve(__dirname, "../../stores/boards.json"), JSON.stringify(store, null, 4));
         }
 
         if (reaction.emoji.name === "💀") {
-            const messageInStore = store.skullboard.find((msg) => msg.id === message.id);
+            const messageInStore = store.starboard.find((msg) => {
+                return msg.id === message.id;
+            });
 
             if (messageInStore) {
                 const msg = await skullboardChannel.messages.fetch(messageInStore.message);
@@ -76,6 +82,8 @@ module.exports = () => {
                 message: msg.id,
                 channel: channel.id,
             });
+
+            writeFileSync(path.resolve(__dirname, "../../stores/boards.json"), JSON.stringify(store, null, 4));
         }
     };
 
