@@ -27,7 +27,7 @@ module.exports = () => {
         });
 
         if (reaction.emoji.name === "⭐") {
-            const messageInStore = store.starboard.find((msg) => msg.message === message.id);
+            const messageInStore = store.starboard.find((msg) => msg.id === message.id);
 
             if (messageInStore) {
                 const msg = await starboardChannel.messages.fetch(messageInStore.message);
@@ -53,7 +53,7 @@ module.exports = () => {
         }
 
         if (reaction.emoji.name === "💀") {
-            const messageInStore = store.skullboard.find((msg) => msg.message === message.id);
+            const messageInStore = store.skullboard.find((msg) => msg.id === message.id);
 
             if (messageInStore) {
                 const msg = await skullboardChannel.messages.fetch(messageInStore.message);
